@@ -16,3 +16,5 @@ module DelegateIdTo
     end
   end
 end
+
+ActiveRecord::Base.send(:include, DelegateIdTo) unless ActiveRecord::Base.included_modules.include? DelegateIdTo
