@@ -1,20 +1,21 @@
 module DelegateIdTo
-  extend ActiveSupport::Concern
-
-  module ClassMethods
-    def delegate_id_to(*args)
-      args.each do |method_sym|
-        define_method(:"#{method_sym}_id") do
-          object = send(method_sym)
-          object && object.id
+  def self.included(base) # :nodoc:
+    base.class_eval do
+      def self.delegate_id_to(*args)
+        args.each do |method_sym|
+          define_method(:"#{method_sym}_id") do
+            object = send(method_sym)
+            object && object.id
+          end
         end
       end
-    end
 
-    def delegate_id_to_singular_associations
-      delegate_id_to *reflect_on_all_associations(:has_one).map(&:name)
+      def self.delegate_id_to_singular_associations
+        # @note For ActiveRecord::Base and children only
+        delegate_id_to *reflect_on_all_associations(:has_one).map(&:name)
+      end
     end
   end
 end
 
-ActiveRecord::Base.send(:include, DelegateIdTo) unless ActiveRecord::Base.included_modules.include? DelegateIdTo
+Kernel.send(:include, DelegateIdTo) unless Kernel.included_modules.include? DelegateIdTo
