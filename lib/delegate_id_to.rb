@@ -12,7 +12,7 @@ module DelegateIdTo
 
       def self.delegate_id_to_singular_associations
         # @note For ActiveRecord::Base and children only
-        delegate_id_to *reflect_on_all_associations(:has_one).map(&:name)
+        delegate_id_to *self.reflect_on_all_associations(:has_one).map(&:name)
       end
     end
   end
